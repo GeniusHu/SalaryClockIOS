@@ -1,13 +1,12 @@
 import Foundation
 
-enum UserDefaultsKeys {
-    static let userSettings = "userSettings"
-}
-
 class UserDefaultsManager {
     static let shared = UserDefaultsManager()
     private let defaults = UserDefaults.standard
     
+    private init() {}
+    
+    // MARK: - UserSettings
     func saveUserSettings(_ settings: UserSettings) {
         if let encoded = try? JSONEncoder().encode(settings) {
             defaults.set(encoded, forKey: UserDefaultsKeys.userSettings)
@@ -20,5 +19,14 @@ class UserDefaultsManager {
             return settings
         }
         return .default
+    }
+    
+    // MARK: - Theme
+    func saveThemeMode(_ isDark: Bool) {
+        defaults.set(isDark, forKey: UserDefaultsKeys.themeMode)
+    }
+    
+    func getThemeMode() -> Bool {
+        return defaults.bool(forKey: UserDefaultsKeys.themeMode)
     }
 } 

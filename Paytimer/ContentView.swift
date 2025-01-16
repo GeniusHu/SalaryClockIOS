@@ -5,16 +5,19 @@ struct ContentView: View {
         TabView {
             DashboardView()
                 .tabItem {
-                    Image(systemName: "clock.fill")
-                    Text("工作")
+                    Label(NSLocalizedString("dashboard.title", comment: ""), systemImage: "house.fill")
                 }
             
             SettingsView()
                 .tabItem {
-                    Image(systemName: "gearshape.fill")
-                    Text("设置")
+                    Label(NSLocalizedString("settings.title", comment: ""), systemImage: "gearshape.fill")
                 }
         }
-        .tint(.blue)
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }

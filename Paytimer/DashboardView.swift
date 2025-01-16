@@ -1,29 +1,29 @@
 import SwiftUI
-
 struct DashboardView: View {
-    @State private var userSettings = UserDefaultsManager.shared.getUserSettings()
-    
+    @State private var currentTime = Date()
+    @State private var earnings = Earnings(today: 2000, month: 5000, year: 10000)
+    @State private var userSettings = UserSettings()
+
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 16) {
-                    UserInfoCardView(settings: userSettings)
-                        .padding()
-                    
-                    CountdownView()
-                        .padding()
-                    
-                    EarningsView()
-                        .padding()
-                }
+        ScrollView {
+            VStack(spacing: 16) {
+                HeaderView(currentTime: $currentTime)
+                InfoCardView(userSettings: userSettings)
+                CountdownCardView(workEndTime: userSettings.workEndTime)
+                EarningsCardView(earnings: earnings)
+                TipsCardView()
+                ShareButtonView()
             }
-            .navigationTitle("工作计时")
+            .padding(.horizontal, 16)
         }
+        .background(Color(hex: "#FFD700")) // 卡片背景颜色
+    }
+
+
+    private func updateEarnings() {
+        guard let startTime = userSettings.workStartTime.toDate(),
+              let endTime = userSettings.workEndTime.toDate() else { return }
+        let dailySalary = calculateDailyEarnings(salary: userSettings.monthlySalary, workDays: userSettings.workDays.count)
+        earnings.today = calculateCurrentEarnings(dailySalary: dailySalary, startTime: startTime, endTime: endTime, currentTime: Date())
     }
 }
-
-struct DashboardView_Previews: PreviewProvider {
-    static var previews: some View {
-        DashboardView()
-    }
-} 

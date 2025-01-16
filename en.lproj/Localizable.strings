@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  Paytimer
+
+  Created by Hu on 2025/1/17.
+  
+*/
+"dashboard.title" = "Dashboard";
+"dashboard.current_time" = "Current Time";
+"dashboard.join_date" = "Join Date";
+"dashboard.monthly_salary" = "Monthly Salary";
+"dashboard.next_shift" = "Time Until Next Shift";
+"dashboard.today_earnings" = "Today's Earnings";
+"dashboard.month_earnings" = "This Month's Earnings";
+"dashboard.year_earnings" = "This Year's Earnings";
+"time.off_work" = "Off Work";

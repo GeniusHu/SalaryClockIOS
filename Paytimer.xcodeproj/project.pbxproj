@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		859539DD2D395AAF005A071B /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 859539DC2D395AAF005A071B /* Podfile */; };
+		85E4521B2D3968F8003456E0 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E4521A2D3968F8003456E0 /* UserDefaultsKeys.swift */; };
+		85E452582D398B57003456E0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 85E452562D398B57003456E0 /* Localizable.strings */; };
+		C1E43A2DE34B2489E3F1B51E /* Pods_Paytimer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D021E582A1A24611D0E064 /* Pods_Paytimer.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		859539AE2D39375C005A071B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,9 +31,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		23D021E582A1A24611D0E064 /* Pods_Paytimer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Paytimer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8595399D2D39375B005A071B /* Paytimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Paytimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		859539AD2D39375C005A071B /* PaytimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaytimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		859539B72D39375C005A071B /* PaytimerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaytimerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		859539DC2D395AAF005A071B /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		85E4521A2D3968F8003456E0 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		85E452572D398B57003456E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		85E452592D398B8F003456E0 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		C4F148A115C57484D0A59358 /* Pods-Paytimer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Paytimer.release.xcconfig"; path = "Target Support Files/Pods-Paytimer/Pods-Paytimer.release.xcconfig"; sourceTree = "<group>"; };
+		EFC8D24ACFA1B3B549317BB2 /* Pods-Paytimer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Paytimer.debug.xcconfig"; path = "Target Support Files/Pods-Paytimer/Pods-Paytimer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1E43A2DE34B2489E3F1B51E /* Pods_Paytimer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,13 +87,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		316014FED27DDF4EF29F218A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				23D021E582A1A24611D0E064 /* Pods_Paytimer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		859539942D39375B005A071B = {
 			isa = PBXGroup;
 			children = (
+				85E452562D398B57003456E0 /* Localizable.strings */,
+				85E4521A2D3968F8003456E0 /* UserDefaultsKeys.swift */,
 				8595399F2D39375B005A071B /* Paytimer */,
 				859539B02D39375C005A071B /* PaytimerTests */,
 				859539BA2D39375C005A071B /* PaytimerUITests */,
 				8595399E2D39375B005A071B /* Products */,
+				859539DC2D395AAF005A071B /* Podfile */,
+				E0B00386828F6C15975E9FA9 /* Pods */,
+				316014FED27DDF4EF29F218A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +120,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		E0B00386828F6C15975E9FA9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EFC8D24ACFA1B3B549317BB2 /* Pods-Paytimer.debug.xcconfig */,
+				C4F148A115C57484D0A59358 /* Pods-Paytimer.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,9 +136,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 859539C12D39375C005A071B /* Build configuration list for PBXNativeTarget "Paytimer" */;
 			buildPhases = (
+				A841E0EF579ADEA76D22F78B /* [CP] Check Pods Manifest.lock */,
 				859539992D39375B005A071B /* Sources */,
 				8595399A2D39375B005A071B /* Frameworks */,
 				8595399B2D39375B005A071B /* Resources */,
+				8F83C0F606150220022A4BE2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -111,8 +150,6 @@
 				8595399F2D39375B005A071B /* Paytimer */,
 			);
 			name = Paytimer;
-			packageProductDependencies = (
-			);
 			productName = Paytimer;
 			productReference = 8595399D2D39375B005A071B /* Paytimer.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +171,6 @@
 				859539B02D39375C005A071B /* PaytimerTests */,
 			);
 			name = PaytimerTests;
-			packageProductDependencies = (
-			);
 			productName = PaytimerTests;
 			productReference = 859539AD2D39375C005A071B /* PaytimerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +192,6 @@
 				859539BA2D39375C005A071B /* PaytimerUITests */,
 			);
 			name = PaytimerUITests;
-			packageProductDependencies = (
-			);
 			productName = PaytimerUITests;
 			productReference = 859539B72D39375C005A071B /* PaytimerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -192,6 +225,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 859539942D39375B005A071B;
 			minimizedProjectReferenceProxies = 1;
@@ -212,6 +246,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85E452582D398B57003456E0 /* Localizable.strings in Resources */,
+				859539DD2D395AAF005A071B /* Podfile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,11 +267,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		8F83C0F606150220022A4BE2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Paytimer/Pods-Paytimer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Paytimer/Pods-Paytimer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Paytimer/Pods-Paytimer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A841E0EF579ADEA76D22F78B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Paytimer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		859539992D39375B005A071B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85E4521B2D3968F8003456E0 /* UserDefaultsKeys.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,12 +347,25 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		85E452562D398B57003456E0 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				85E452572D398B57003456E0 /* en */,
+				85E452592D398B8F003456E0 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		859539BF2D39375C005A071B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -337,6 +429,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -390,6 +483,7 @@
 		};
 		859539C22D39375C005A071B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFC8D24ACFA1B3B549317BB2 /* Pods-Paytimer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -398,6 +492,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Paytimer/Preview Content\"";
 				DEVELOPMENT_TEAM = FN724WMQLF;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -419,6 +514,7 @@
 		};
 		859539C32D39375C005A071B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4F148A115C57484D0A59358 /* Pods-Paytimer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -427,6 +523,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Paytimer/Preview Content\"";
 				DEVELOPMENT_TEAM = FN724WMQLF;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

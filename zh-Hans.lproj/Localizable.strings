@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  Paytimer
+
+  Created by Hu on 2025/1/17.
+  
+*/
+"dashboard.title" = "仪表盘";
+"dashboard.current_time" = "当前时间";
+"dashboard.join_date" = "入职时间";
+"dashboard.monthly_salary" = "月薪";
+"dashboard.next_shift" = "距离下班还有";
+"dashboard.today_earnings" = "今日收入";
+"dashboard.month_earnings" = "本月收入";
+"dashboard.year_earnings" = "今年收入";
+"time.off_work" = "已下班";
