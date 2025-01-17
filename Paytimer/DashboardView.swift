@@ -1,29 +1,32 @@
 import SwiftUI
+import Combine
+
 struct DashboardView: View {
-    @State private var currentTime = Date()
-    @State private var earnings = Earnings(today: 2000, month: 5000, year: 10000)
+    @StateObject private var timerManager: TimerManager
     @State private var userSettings = UserSettings()
+
+    init() {
+        _timerManager = StateObject(wrappedValue: TimerManager(userSettings: UserSettings()))
+    }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                HeaderView(currentTime: $currentTime)
+                HeaderView(currentTime: $timerManager.currentTime)
                 InfoCardView(userSettings: userSettings)
-                CountdownCardView(workEndTime: userSettings.workEndTime)
-                EarningsCardView(earnings: earnings)
+                CountdownCardView()
+                EarningsCardView(earnings: timerManager.earnings)
                 TipsCardView()
                 ShareButtonView()
             }
             .padding(.horizontal, 16)
         }
-        .background(Color(hex: "#FFD700")) // 卡片背景颜色
-    }
-
-
-    private func updateEarnings() {
-        guard let startTime = userSettings.workStartTime.toDate(),
-              let endTime = userSettings.workEndTime.toDate() else { return }
-        let dailySalary = calculateDailyEarnings(salary: userSettings.monthlySalary, workDays: userSettings.workDays.count)
-        earnings.today = calculateCurrentEarnings(dailySalary: dailySalary, startTime: startTime, endTime: endTime, currentTime: Date())
+        .background(Color(hex: "#FFD700")) // 背景颜色
+        .onAppear {
+            timerManager.startTimer() // 页面加载时启动计时器
+        }
+        .onDisappear {
+            timerManager.stopTimer() // 页面离开时停止计时器
+        }
     }
 }

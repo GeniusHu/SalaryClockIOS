@@ -12,7 +12,7 @@ struct HeaderView: View {
     var body: some View {
         VStack(spacing: 10) {
             HStack {
-                Text("薪时计")
+                Text("牛马时钟")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.black)
                 Spacer()

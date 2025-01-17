@@ -7,12 +7,31 @@
 
 import Foundation
 
+
+// String 转 Date 工具
 extension String {
     func toDate(format: String = "HH:mm") -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        return dateFormatter.date(from: self)
+        
+        // 获取当前日期
+        let today = Date()
+        let calendar = Calendar.current
+        let currentDateComponents = calendar.dateComponents([.year, .month, .day], from: today)
+        
+        // 将当前日期的年月日和字符串时间结合
+        guard let timeOnlyDate = dateFormatter.date(from: self) else { return nil }
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: timeOnlyDate)
+        
+        var finalComponents = DateComponents()
+        finalComponents.year = currentDateComponents.year
+        finalComponents.month = currentDateComponents.month
+        finalComponents.day = currentDateComponents.day
+        finalComponents.hour = timeComponents.hour
+        finalComponents.minute = timeComponents.minute
+        
+        return calendar.date(from: finalComponents)
     }
 }
 

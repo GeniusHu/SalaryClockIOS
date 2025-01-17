@@ -5,39 +5,33 @@
 //  Created by Hu on 2025/1/17.
 //
 
-import Foundation
 import SwiftUI
+import Foundation
+
 struct TipsCardView: View {
+    var tips: [String] = [
+        "工作再累，也要记得喝水休息",
+        "合理安排时间，提高工作效率",
+        "适度摸鱼，保持心情愉悦"
+    ]
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("摸鱼小贴士")
                 .font(.headline)
+                .bold()
                 .foregroundColor(.black)
-            Text("• 工作再累，也要记得喝水休息\n• 合理安排时间，提高工作效率\n• 适度摸鱼，保持心情愉悦")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
-    }
-}
-struct ShareButtonView: View {
-    var body: some View {
-        Button(action: {
-            // 分享功能
-        }) {
-            HStack {
-                Image(systemName: "square.and.arrow.up")
-                Text("分享给好友")
+            
+            ForEach(tips, id: \.self) { tip in
+                Text("• \(tip)")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
             }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color(hex: "#FFD700"))
-            .foregroundColor(.white)
-            .cornerRadius(12)
-            .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
         }
+        .padding(16) // 内边距
+        .frame(maxWidth: .infinity) // 横向撑满
+        .background(Color.white) // 背景色
+        .cornerRadius(12) // 圆角
+        .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2) // 阴影
     }
 }
