@@ -8,6 +8,15 @@ struct PaytimerApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(isDarkMode ? .dark : .light)
+                .onAppear {
+                                    NotificationCenter.default.addObserver(
+                                        forName: UIApplication.didBecomeActiveNotification,
+                                        object: nil,
+                                        queue: .main
+                                    ) { _ in
+                                        EarningsManager.shared.updateMonthlyAndYearlyEarnings()
+                                    }
+                                }
         }
     }
 }

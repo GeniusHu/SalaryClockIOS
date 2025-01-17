@@ -15,52 +15,46 @@ struct Holiday: Codable {
 
 class HolidayManager {
     static let shared = HolidayManager()
-    private var holidays: [String: Holiday] = [:] // 使用日期作为键存储
-    private let calendar = Calendar.current
+        private var holidays: [String: Holiday] = [:] // 使用日期作为键存储
+        private let calendar = Calendar.current
 
-    private init() {}
-
-    // MARK: - 节假日相关逻辑
-
-    /// 从网络获取节假日
-    func fetchHolidays(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "https://www.shuyz.com/githubfiles/china-holiday-calender/master/holidayAPI.json") else {
-            completion(false)
-            return
+        private init() {
+            loadLocalHolidays()
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error fetching holidays: \(error)")
-                completion(false)
-                return
-            }
+    // MARK: - 本地节假日数据
 
-            guard let data = data else {
-                print("No data received")
-                completion(false)
-                return
-            }
+        /// 加载本地节假日数据
+        private func loadLocalHolidays() {
+            let holidaysList = [
+                Holiday(date: "2025-01-01", isHoliday: true, name: "元旦"),
+                Holiday(date: "2025-02-01", isHoliday: true, name: "春节"),
+                Holiday(date: "2025-02-02", isHoliday: true, name: "春节"),
+                Holiday(date: "2025-02-03", isHoliday: true, name: "春节"),
+                Holiday(date: "2025-02-04", isHoliday: true, name: "春节"),
+                Holiday(date: "2025-02-05", isHoliday: true, name: "春节"),
+                Holiday(date: "2025-02-06", isHoliday: true, name: "春节"),
+                Holiday(date: "2025-04-05", isHoliday: true, name: "清明节"),
+                Holiday(date: "2025-05-01", isHoliday: true, name: "劳动节"),
+                Holiday(date: "2025-06-01", isHoliday: true, name: "端午节"),
+                Holiday(date: "2025-09-14", isHoliday: true, name: "中秋节"),
+                Holiday(date: "2025-10-01", isHoliday: true, name: "国庆节"),
+                Holiday(date: "2025-10-02", isHoliday: true, name: "国庆节"),
+                Holiday(date: "2025-10-03", isHoliday: true, name: "国庆节"),
+                Holiday(date: "2025-10-04", isHoliday: true, name: "国庆节"),
+                Holiday(date: "2025-10-05", isHoliday: true, name: "国庆节"),
+                Holiday(date: "2025-10-06", isHoliday: true, name: "国庆节"),
+                Holiday(date: "2025-10-07", isHoliday: true, name: "国庆节")
+            ]
 
-            do {
-                let holidaysList = try JSONDecoder().decode([Holiday].self, from: data)
-                var tempHolidays: [String: Holiday] = [:]
-                for holiday in holidaysList {
-                    tempHolidays[holiday.date] = holiday
-                }
-                DispatchQueue.main.async {
-                    self.holidays = tempHolidays
-                    completion(true)
-                }
-            } catch {
-                print("Error decoding holidays JSON: \(error)")
-                completion(false)
+            for holiday in holidaysList {
+                holidays[holiday.date] = holiday
             }
-        }.resume()
-    }
+        }
 
     /// 判断是否是法定节假日
     func isHoliday(date: String) -> Bool {
+        print("isHoliday" ,date, holidays[date]?.isHoliday ?? false)
         return holidays[date]?.isHoliday ?? false
     }
 
