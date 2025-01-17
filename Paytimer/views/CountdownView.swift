@@ -44,10 +44,10 @@ struct CountdownCardView: View {
         .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 2)
         .frame(maxWidth: .infinity)
         .onAppear {
-                    updateTargetTime()
                 }
                 .onReceive(timerManager.$currentTime) { _ in
                     updateCountdown()
+                    updateTargetTime()
                 }
     }
    
@@ -68,7 +68,7 @@ struct CountdownCardView: View {
     }
     
     
-    private func updateTargetTime() {
+    public func updateTargetTime() {
            print("正在更新目标时间...")
            let now = timerManager.currentTime
            let calendar = Calendar.current

@@ -113,13 +113,16 @@ class HolidayManager {
 
     /// 查找下一个工作日
     func nextWorkday(from date: Date) -> Date? {
+        var count = 0
         var nextDate = date
-        while true {
+        while (count < 20) {
+            count+=1
             nextDate = calendar.date(byAdding: .day, value: 1, to: nextDate)!
             if isWorkday(date: nextDate) {
                 return nextDate
             }
         }
+        return nil
     }
 
     // MARK: - 时间计算逻辑
@@ -156,4 +159,30 @@ class HolidayManager {
 
         return nextWorkStartTime.timeIntervalSince(date)
     }
+    
+    func saveCustomWorkdays(workdays: [Bool]) {
+            let workdayKeys = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            var workdayDict: [String: Bool] = [:]
+            for (index, isWorkday) in workdays.enumerated() {
+                workdayDict[workdayKeys[index]] = isWorkday
+            }
+            UserDefaults.standard.set(workdayDict, forKey: "CustomWorkdays")
+        }
+
+        // 加载自定义工作日 (数组形式)
+        func loadCustomWorkdaysArray() -> [Bool] {
+            let workdayDict = loadCustomWorkdays()
+            let workdayKeys = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            return workdayKeys.map { workdayDict[$0] ?? false }
+        }
+
+        // 保存入职日期
+        func saveStartDate(startDate: String) {
+            UserDefaults.standard.set(startDate, forKey: "StartDate")
+        }
+
+        // 获取入职日期
+        func getStartDate() -> String {
+            return UserDefaults.standard.string(forKey: "StartDate") ?? "2024/01/01"
+        }
 }

@@ -9,6 +9,7 @@ import Foundation
 struct InfoCardView: View {
     var userSettings: UserSettings
 
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {

@@ -8,7 +8,8 @@
 import Foundation
 
 class EarningsManager: ObservableObject {
-    static let shared = EarningsManager(monthlySalary: 10000) // 默认初始化时传入一个默认值
+    static let shared = EarningsManager() // 默认初始化时传入一个默认值
+    private let userDefaults = UserDefaults.standard
 
     @Published var earnings: Earnings
 
@@ -19,8 +20,13 @@ class EarningsManager: ObservableObject {
      var dailySalary: Double
      var workdaysThisMonth: Int
 
-    private init(monthlySalary: Double) {
-        self.monthlySalary = monthlySalary
+    private init() {
+        // 从 UserDefaults 加载月薪
+      self.monthlySalary = userDefaults.double(forKey: "MonthlySalary")
+               if self.monthlySalary == 0 {
+                   self.monthlySalary = 10000 // 默认值
+               }
+
         self.earnings = Earnings(today: 0, month: 0, year: 0)
 
         // 初始化数据
@@ -46,6 +52,7 @@ class EarningsManager: ObservableObject {
     /// 更新月薪
        func updateMonthlySalary(newSalary: Double) {
            self.monthlySalary = newSalary
+           userDefaults.set(newSalary, forKey: "MonthlySalary")
 
            // 重新计算每日薪水
            self.dailySalary = incomeCalculator.calculateDailySalary(monthlySalary: newSalary, workdays: workdaysThisMonth)

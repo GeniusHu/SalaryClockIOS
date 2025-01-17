@@ -58,14 +58,14 @@ class TimerManager: ObservableObject {
             currentTime: currentTime
         )
         
-        print("每日工资: \(dailySalary)")
-          print("开始时间: \(startTime)")
-          print("结束时间: \(endTime)")
-          print("当前时间: \(currentTime)")
-          
-        
-        print("每日工资：\(dailySalary)")
-        print("今日收入：\(earnings.today)")
+//        print("每日工资: \(dailySalary)")
+//          print("开始时间: \(startTime)")
+//          print("结束时间: \(endTime)")
+//          print("当前时间: \(currentTime)")
+//          
+//        
+//        print("每日工资：\(dailySalary)")
+//        print("今日收入：\(earnings.today)")
     }
     
 }

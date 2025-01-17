@@ -8,6 +8,8 @@ import SwiftUI
 import Foundation
 struct HeaderView: View {
     @Binding var currentTime: Date
+    @State private var showSettings = false // 控制设置页的显示状态
+
 
     var body: some View {
         VStack(spacing: 10) {
@@ -17,12 +19,14 @@ struct HeaderView: View {
                     .foregroundColor(.black)
                 Spacer()
                 Button(action: {
-                    // 设置按钮操作
+                    showSettings = true // 打开设置页
                 }) {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 24))
                         .foregroundColor(.black)
                 }
+            }.fullScreenCover(isPresented: $showSettings) {
+                SettingsView(isPresented: $showSettings, earningsManager: EarningsManager.shared)
             }
             .padding([.leading, .trailing], 16)
 
