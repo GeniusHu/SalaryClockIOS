@@ -6,25 +6,33 @@
 //
 import SwiftUI
 import Foundation
+import SwiftUI
+import Foundation
 
 struct InfoCardView: View {
     @ObservedObject var appData = AppDataManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            // 入职时间
-//            Text("入职时间: \(appData.joinDate.formattedTime("yyyy/MM/dd"))")
-//                .font(.system(size: 14))
-//                .foregroundColor(.gray)
-//            
             // 月薪
             HStack {
                 Text("月薪:")
                     .font(.system(size: 14))
-                    .foregroundColor(.gray)
-                Text("¥\(appData.monthlySalary, specifier: "%.2f")")
+                    .foregroundColor(.black)
+
+                // 显示金额或 "***"
+                let isHidden = appData.hideAllAmounts || (appData.itemVisibility["salary"] ?? false)
+                Text(isHidden ? "***" : "¥\(appData.monthlySalary, specifier: "%.2f")")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(Color(hex: "#FFD700"))
+
+                // 小眼睛按钮
+                Button(action: {
+                    appData.toggleItemVisibility(for: "salary")
+                }) {
+                    Image(systemName: isHidden ? "eye.slash.fill" : "eye.fill")
+                        .foregroundColor(Color(hex: "#6B7280"))
+                }
                 Spacer()
             }
         }

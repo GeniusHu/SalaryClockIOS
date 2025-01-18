@@ -25,12 +25,14 @@ struct EarningsRow: View {
     var title: String
     var amount: Double
     let itemKey: String
+    @ObservedObject private var appData = AppDataManager.shared
+
 
     var body: some View {
         // 1. 先判断是否要隐藏
                //   - 如果 hideAllAmounts=true，则无条件显示 "***"
                //   - 否则再看 itemVisibility[itemKey] 是否为 true
-               let isHidden = AppDataManager.shared.hideAllAmounts || (AppDataManager.shared.itemVisibility[itemKey] ?? false)
+        let isHidden = appData.hideAllAmounts || (appData.itemVisibility[itemKey] ?? false)
         // 2. 显示文案
                let displayAmount: String = {
                    if isHidden {
@@ -51,12 +53,7 @@ struct EarningsRow: View {
                     .foregroundColor(Color(hex: "#CA8A04")) // 金额颜色
                 Button(action: {
                     // 切换单项的隐藏状态
-                    AppDataManager.shared.toggleItemVisibility(for: itemKey)
-                    if isHidden {
-                        "***"
-                    } else {
-                        Text(String(format: "%.2f", amount))
-                    }
+                    appData.toggleItemVisibility(for: itemKey)
                 }) {
                     // 如果当前隐藏，则图标用 eye.slash.fill
                                        // 如果当前显示，则图标用 eye.fill

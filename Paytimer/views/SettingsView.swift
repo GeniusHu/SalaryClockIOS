@@ -70,33 +70,33 @@ struct SettingsView: View {
                     }
 
                     // 入职日期设置
-                    Section(header: Text("入职日期")) {
-                        Button(action: { activePicker = .startDate }) {
-                            HStack {
-                                Text("入职日期")
-                                Spacer()
-                                Text(startDate.formattedTime("yyyy/MM/dd"))
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    }
+//                    Section(header: Text("入职日期")) {
+//                        Button(action: { activePicker = .startDate }) {
+//                            HStack {
+//                                Text("入职日期")
+//                                Spacer()
+//                                Text(startDate.formattedTime("yyyy/MM/dd"))
+//                                    .foregroundColor(.gray)
+//                            }
+//                        }
+//                    }
 
                     // 工作日设置
-                    Section(header: Text("工作日")) {
-                        HStack {
-                            ForEach(0..<7, id: \.self) { index in
-                                Button(action: {
-                                    customWorkdays[index].toggle()
-                                }) {
-                                    Text(["周一", "周二", "周三", "周四", "周五", "周六", "周日"][index])
-                                        .padding()
-                                        .background(customWorkdays[index] ? Color.yellow : Color.gray.opacity(0.2))
-                                        .cornerRadius(8)
-                                        .foregroundColor(customWorkdays[index] ? .white : .black)
-                                }
-                            }
-                        }
-                    }
+//                    Section(header: Text("工作日")) {
+//                        HStack {
+//                            ForEach(0..<7, id: \.self) { index in
+//                                Button(action: {
+//                                    customWorkdays[index].toggle()
+//                                }) {
+//                                    Text(["周一", "周二", "周三", "周四", "周五", "周六", "周日"][index])
+//                                        .padding()
+//                                        .background(customWorkdays[index] ? Color.yellow : Color.gray.opacity(0.2))
+//                                        .cornerRadius(8)
+//                                        .foregroundColor(customWorkdays[index] ? .white : .black)
+//                                }
+//                            }
+//                        }
+//                    }
 
                     // 隐藏金额开关
                     Section {
