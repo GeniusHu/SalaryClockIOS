@@ -48,18 +48,21 @@ class EarningsManager {
         self.monthlySalary = newSalary
         
         // 1. 计算“这个月”的总工作日数
-        let totalWorkDays = getWorkingDaysCountOfMonth(
-            date: date,
-            holidayManager: holidayManager,
-            customWorkdays: customWorkdays
-        )
+//        let totalWorkDays = getWorkingDaysCountOfMonth(
+//            date: date,
+//            holidayManager: holidayManager,
+//            customWorkdays: customWorkdays
+//        )
+        
+        //固定为22天
+        let totalWorkDays = 22
         
         // 2. 求日薪
-        guard totalWorkDays > 0 else {
-            // 若整月都休息(或节假日)，则日薪=0
-            self.dailySalary = 0
-            return
-        }
+//        guard totalWorkDays > 0 else {
+//            // 若整月都休息(或节假日)，则日薪=0
+//            self.dailySalary = 0
+//            return
+//        }
         
         let dSalary = newSalary / Double(totalWorkDays)
         self.dailySalary = dSalary
@@ -167,14 +170,194 @@ class EarningsManager {
         return fullDaysEarnings + todaySoFar
     }
     
+    // 计算全年收入的函数
+    func calculateYearlyEarnings(now: Date, monthlySalary: Double, monthSoFar: Double) -> Double {
+        let calendar = Calendar.current
+        let currentMonth = calendar.component(.month, from: now)
+
+        // 完整月份的收入
+        let previousMonthsIncome = Double(currentMonth - 1) * monthlySalary
+
+        // 全年收入 = 之前完整月份的收入 + 当前月到当前时间的收入
+        return previousMonthsIncome + monthSoFar
+    }
+    
     // MARK: - 4. 其他辅助，比如“全年收入”等
     
-    /**
-     计算全年收入（简单起见：月薪*12），或根据 business 需求另行实现。
-     */
-    func calculateYearlyEarnings() -> Double {
-        return monthlySalary * 12
+
+    func calculateYearlyEarnings(joinDate: Date) -> Double {
+        // 1) 获取当前时间
+        let now = Date()
+        // 2) 获取今年是哪一年
+        let year = Calendar.current.component(.year, from: now)
+        // 3) 获取入职日期 (示例：从 AppDataManager 读)
+        //    如果你在 EarningsManager 并没有存 joinDate，就需要从外部单例或别的地方取。
+//        let joinDate = AppDataManager.shared.joinDate
+//        let joinDate = Date()
+        
+        // 4) 读 holidayManager & customWorkdays
+        let holidayManager = HolidayManager.shared
+        let customWorkdays = holidayManager.customWorkdays
+        
+        // 5) 调用长函数，传好参数
+        return calculateThisYearEarningsSoFar(
+            year: year,
+            now: now,
+            joinDate: joinDate,
+            monthlySalary: self.monthlySalary,
+            holidayManager: holidayManager,
+            customWorkdays: customWorkdays
+        )
     }
+    
+    /**
+     计算“今年到当前日期为止”的总收入（考虑入职日期、部分月份只算部分天）
+     
+     - parameter year:        要计算的年份（例如 2025）
+     - parameter now:         当前日期（只算到这一天）
+     - parameter joinDate:    入职日期（若在今年之前，就从今年1月1开始算）
+     - parameter monthlySalary: 当年的月薪
+     - parameter holidayManager: 用于判断节假日和工作日
+     - parameter customWorkdays: 用户定义的周一~周日哪几天上班
+
+     示例：
+     如果入职时间 = 2025-01-10，今天=2025-03-20：
+     1) 1月仅从1/10~1/31 这段工作日计入
+     2) 2月是整月 (2/1~2/28)
+     3) 3月部分 (3/1~3/20)
+     
+     返回：该年度从入职日到当前日累计的工资总额
+     */
+    func calculateThisYearEarningsSoFar(
+        year: Int,
+        now: Date,
+        joinDate: Date,
+        monthlySalary: Double,
+        holidayManager: HolidayManager,
+        customWorkdays: [Bool]
+    ) -> Double
+    {
+        let calendar = Calendar.current
+        
+        // 如果 joinDate 已在明年或更晚，说明今年都没上班
+        if calendar.component(.year, from: joinDate) > year {
+            return 0.0
+        }
+        
+        // 如果 now 在更早的年份，也没啥好算
+        if calendar.component(.year, from: now) < year {
+            return 0.0
+        }
+        
+        var totalEarnings = 0.0
+        
+        // 构造 “今年1月1日” 和 “今年12月31日”
+        // 不过我们只会算到 now
+        guard let startOfYear = calendar.date(from: DateComponents(year: year, month: 1, day: 1)),
+              let endOfYear   = calendar.date(from: DateComponents(year: year, month: 12, day: 31))
+        else {
+            return 0.0
+        }
+        
+        // 本年度实际要计算的“起点” = max(入职日, 今年1月1日)
+        let actualStart = max(startOfYear, joinDate)
+        // 本年度实际要计算的“终点” = min(现在, 今年12月31日)
+        let actualEnd   = min(now, endOfYear)
+        
+        // 如果实际区间无效
+        if actualStart > actualEnd {
+            return 0.0
+        }
+        
+        // 循环当年的12个月，但只处理 [actualStart, actualEnd] 所覆盖的部分
+        for month in 1...12 {
+            // 该月1号
+            guard let monthStart = calendar.date(from: DateComponents(year: year, month: month, day: 1)) else {
+                continue
+            }
+            
+            // 该月的下个月1号 - 1天，得到这个月末
+            // or 直接 date(byAdding: .month, value: 1, to: monthStart) then -1 day
+            guard let nextMonth = calendar.date(byAdding: .month, value: 1, to: monthStart),
+                  let monthEnd = calendar.date(byAdding: .day, value: -1, to: nextMonth)
+            else {
+                continue
+            }
+            
+            // 这个月的“有效起点” = max(monthStart, actualStart)
+            let monthEffectiveStart = max(monthStart, actualStart)
+            // 这个月的“有效终点”   = min(monthEnd, actualEnd)
+            let monthEffectiveEnd   = min(monthEnd, actualEnd)
+            
+            // 如果这个月根本不在要计算的区间
+            if monthEffectiveStart > monthEffectiveEnd {
+                // 说明本月没任何天需要计算
+                continue
+            }
+            
+            // 计算“该月总工作日数”
+            let workDaysCount = getWorkingDaysCountOfMonth(
+                date: monthStart,
+                holidayManager: holidayManager,
+                customWorkdays: customWorkdays
+            )
+            if workDaysCount == 0 {
+                // 如果整月都没有工作日(或节假日太多)，本月收入=0
+                continue
+            }
+            
+            // 日薪 = 月薪 / 本月工作日数
+            let dailySalary = monthlySalary / Double(workDaysCount)
+            
+            // 再统计“该月有效区间”里实际落在工作日的天数
+            let actualWorkingDaysInThisRange = getWorkingDaysCountBetween(
+                startDate: monthEffectiveStart,
+                endDate: monthEffectiveEnd,
+                holidayManager: holidayManager,
+                customWorkdays: customWorkdays
+            )
+            
+            // 本月收入 = 日薪 * 实际工作天数
+            let monthlyPartialIncome = dailySalary * Double(actualWorkingDaysInThisRange)
+            
+            totalEarnings += monthlyPartialIncome
+        }
+        
+        return totalEarnings
+    }
+    
+    /**
+     计算区间 [startDate, endDate] 内的实际工作日天数
+     */
+    func getWorkingDaysCountBetween(
+        startDate: Date,
+        endDate: Date,
+        holidayManager: HolidayManager,
+        customWorkdays: [Bool]
+    ) -> Int {
+        let calendar = Calendar.current
+        
+        // 强制 start <= end
+        if startDate > endDate {
+            return 0
+        }
+        
+        var count = 0
+        var currentDay = calendar.startOfDay(for: startDate)
+        let endDay = calendar.startOfDay(for: endDate)
+        
+        while currentDay <= endDay {
+            if holidayManager.isWorkday(date: currentDay, customWorkdays: customWorkdays) {
+                count += 1
+            }
+            guard let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDay) else {
+                break
+            }
+            currentDay = nextDay
+        }
+        return count
+    }
+    
     
     // MARK: - 私有/辅助方法
     

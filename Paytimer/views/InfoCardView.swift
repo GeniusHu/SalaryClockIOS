@@ -13,10 +13,10 @@ struct InfoCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             // 入职时间
-            Text("入职时间: \(appData.joinDate.formattedTime("yyyy/MM/dd"))")
-                .font(.system(size: 14))
-                .foregroundColor(.gray)
-            
+//            Text("入职时间: \(appData.joinDate.formattedTime("yyyy/MM/dd"))")
+//                .font(.system(size: 14))
+//                .foregroundColor(.gray)
+//            
             // 月薪
             HStack {
                 Text("月薪:")

@@ -40,10 +40,29 @@ class AppDataManager: ObservableObject {
     @Published var monthlyEarnings: Double = 0.0
     @Published var yearlyEarnings: Double = 0.0
     
+    /// 是否隐藏所有金额
+        @Published var hideAllAmounts: Bool = false
+        
+        /**
+         记录各个“金额项目”的独立可见性：
+           - key 为项目的标识，比如 "today", "month", "year" 之类
+           - value = false 表示不隐藏（可见），value = true 表示隐藏
+         */
+        @Published var itemVisibility: [String: Bool] = [
+            "today": false,
+            "month": false,
+            "year": false,
+            "salary":false
+        ]
+    
     // MARK: - 用户设置
     
     /// 入职日期
-    @Published var joinDate: Date = Date()
+    @Published var joinDate: Date = {
+        let defaultDate = Calendar.current.date(from: DateComponents(year: 2025, month: 1, day: 1)) ?? Date()
+        print("joinDate default value: \(defaultDate)")
+        return defaultDate
+    }()
     
     /// 月薪
     @Published var monthlySalary: Double = 10000.0
@@ -56,8 +75,6 @@ class AppDataManager: ObservableObject {
     /// 自定义工作日 (周一~周日: true=上班, false=休息)
     @Published var customWorkdays: [Bool] = [true, true, true, true, true, false, false]
     
-    /// 是否隐藏所有金额
-    @Published var hideAllAmounts: Bool = false
     
     // MARK: - 定时器
     private var timer: Timer?
@@ -101,6 +118,23 @@ class AppDataManager: ObservableObject {
         timer?.invalidate()
         timer = nil
     }
+    
+    /// 切换单个项目的隐藏/显示
+        func toggleItemVisibility(for key: String) {
+            if let current = itemVisibility[key] {
+                itemVisibility[key] = !current
+            } else {
+                // 如果字典里暂时没有该项目，就默认切到隐藏
+                itemVisibility[key] = true
+            }
+            saveToStorage()
+        }
+        
+        /// 设置“隐藏所有金额”开关
+        func setHideAllAmounts(_ hide: Bool) {
+            hideAllAmounts = hide
+            saveToStorage()
+        }
     
     // MARK: - 收入 & 倒计时 更新
     
@@ -194,21 +228,49 @@ class AppDataManager: ObservableObject {
      你可以用 EarningsManager 的算法，或简单自行写
      */
     private func updateEarnings() {
-        // 这里只是做一个极简示例：
-        //   今日收入 = (月薪 / 22) * 工作时长比例
-        //   本月收入 = ...
-        //   全年收入 = 月薪 * 12
+        let now = currentTime  // 你通常会在 appDataManager 里有 currentTime = Date()
+
+        // 1. 告诉 EarningsManager，用最新月薪 & 当月信息来更新“dailySalary”
+        EarningsManager.shared.updateMonthlySalary(
+            newSalary: monthlySalary,
+            for: now,
+            holidayManager: HolidayManager.shared,
+            customWorkdays: customWorkdays
+        )
         
-        // 你可将“是否工作日、workedSeconds”等逻辑从 HolidayManager/EarningsManager 获取
+        // 4. 计算“今日到此刻”为止的收入
+        let isTodayWorkday = HolidayManager.shared.isWorkday(
+            date: now,
+            customWorkdays: customWorkdays
+        )
+        let todaySoFar = EarningsManager.shared.calculateTodayEarningsSoFar(
+            now: now,
+            workStartTime: workStartTime,
+            workEndTime: workEndTime,
+            isTodayWorkday: isTodayWorkday
+        )
+        todayEarnings = todaySoFar
         
-        // 简化：全年收入
-        yearlyEarnings = monthlySalary * 12
         
-        // 简化：本月收入 - 这里随便给个估值
-        monthlyEarnings = monthlySalary * 0.5 // 演示
+        // 3. 计算“本月到此刻”为止的收入
+        let monthSoFar = EarningsManager.shared.calculateThisMonthEarningsSoFar(
+            now: now,
+            holidayManager: HolidayManager.shared,
+            customWorkdays: customWorkdays,
+            workStartTime: workStartTime,
+            workEndTime: workEndTime
+        )
+        monthlyEarnings = monthSoFar
+
+        // 2. 计算“全年收入”
+        yearlyEarnings = EarningsManager.shared.calculateYearlyEarnings(now: now, monthlySalary: monthlySalary, monthSoFar: monthSoFar)
+
+//        yearlyEarnings = EarningsManager.shared.calculateYearlyEarnings(joinDate: joinDate)
         
-        // 简化：今日收入 - 这里随便给个估值
-        todayEarnings = monthlySalary / 30.0 / 2.0
+        // （内部返回 monthlySalary * 12）
+
+
+        
     }
     
     // MARK: - 被 SettingsView 调用的方法
@@ -268,6 +330,11 @@ class AppDataManager: ObservableObject {
         
         // 是否隐藏金额
         hideAllAmounts = ud.bool(forKey: "kHideAllAmounts")
+               
+           // 读取每个项目的可见性
+           if let dict = ud.dictionary(forKey: "kItemVisibility") as? [String: Bool] {
+               itemVisibility = dict
+           }
     }
     
     func saveToStorage() {
@@ -279,6 +346,7 @@ class AppDataManager: ObservableObject {
         ud.set(customWorkdays, forKey: "kCustomWorkdays")
         ud.set(joinDate.timeIntervalSince1970, forKey: "kJoinDate")
         ud.set(hideAllAmounts, forKey: "kHideAllAmounts")
+        ud.set(itemVisibility, forKey: "kItemVisibility")
     }
     
     // MARK: - 辅助

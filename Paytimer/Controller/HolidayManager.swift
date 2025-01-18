@@ -97,8 +97,14 @@ class HolidayManager {
      - returns: 若是节假日则返回 `true`，否则 `false`
      */
     func isHoliday(date: Date) -> Bool {
-        let key = dateString(date)
-        return holidays[key] != nil
+//        let key = dateString(date)
+//        return holidays[key] != nil
+        
+        // 获取星期几，1~7 (周日=1, 周一=2, ..., 周六=7)
+           let weekday = Calendar.current.component(.weekday, from: date)
+           
+           // 如果是周六(7)或周日(1)，返回 true；否则返回 false
+           return weekday == 1 || weekday == 7
     }
     
     /**
@@ -141,17 +147,23 @@ class HolidayManager {
      2. 否则根据 customWorkdays 判断当天是不是用户定义的工作日
      */
     func isWorkday(date: Date, customWorkdays: [Bool]) -> Bool {
-        // 如果是节假日，直接 return false
-        if isHoliday(date: date) {
-            return false
-        }
+//        // 如果是节假日，直接 return false
+//        if isHoliday(date: date) {
+//            return false
+//        }
+//        
+//        // 根据 weekday 判断
+//        let weekday = Calendar.current.component(.weekday, from: date) // 1~7 (周日=1, 周一=2, ...)
+//        // 转换成自定义 workdays 的索引（0~6 的顺序：周一=0,...周日=6）
+//        let customIndex = (weekday + 5) % 7
+//        
+//        return customWorkdays[customIndex]
         
-        // 根据 weekday 判断
-        let weekday = Calendar.current.component(.weekday, from: date) // 1~7 (周日=1, 周一=2, ...)
-        // 转换成自定义 workdays 的索引（0~6 的顺序：周一=0,...周日=6）
-        let customIndex = (weekday + 5) % 7
-        
-        return customWorkdays[customIndex]
+        let calendar = Calendar.current
+           let weekday = calendar.component(.weekday, from: date) // 1~7 (周日=1, 周一=2, ..., 周六=7)
+
+           // 判断是否为工作日（周一到周五）
+           return weekday >= 2 && weekday <= 6
     }
     
     /**
@@ -163,19 +175,39 @@ class HolidayManager {
        从 `from` 这一天开始往后逐天 +1，检查是否为工作日，不是就继续下一天
      */
     func nextWorkday(from: Date) -> Date? {
-        var candidate = from
+//        var candidate = from
+//        
+//        // 最多循环 365 天，防止极端死循环
+//        for _ in 0..<365 {
+//            if isWorkday(date: candidate, customWorkdays: customWorkdays) {
+//                return candidate
+//            }
+//            guard let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: candidate) else {
+//                return nil
+//            }
+//            candidate = nextDay
+//        }
+//        return nil
         
-        // 最多循环 365 天，防止极端死循环
-        for _ in 0..<365 {
-            if isWorkday(date: candidate, customWorkdays: customWorkdays) {
-                return candidate
+        
+        var candidate = from
+            let calendar = Calendar.current
+
+            // 最多循环 365 天，防止极端死循环
+            for _ in 0..<365 {
+                // 判断 candidate 是否是工作日（周一到周五）
+                let weekday = calendar.component(.weekday, from: candidate) // 周日=1, 周一=2, ..., 周六=7
+                if weekday >= 2 && weekday <= 6 {
+                    // 如果是工作日（周一到周五），返回该日期
+                    return candidate
+                }
+                // 增加一天
+                guard let nextDay = calendar.date(byAdding: .day, value: 1, to: candidate) else {
+                    return nil
+                }
+                candidate = nextDay
             }
-            guard let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: candidate) else {
-                return nil
-            }
-            candidate = nextDay
-        }
-        return nil
+            return nil
     }
     
     // MARK: - 上下班时间逻辑
