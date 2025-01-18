@@ -2,14 +2,14 @@ import SwiftUI
 
 struct SettingsView: View {
     @Binding var isPresented: Bool
-    @ObservedObject var earningsManager: EarningsManager
+    @ObservedObject var appData = AppDataManager.shared // 全局数据管理器
 
+    // 本地状态
     @State private var monthlySalary: String = ""
     @State private var workStartTime: Date = Date()
     @State private var workEndTime: Date = Date()
     @State private var startDate: Date = Date()
-    @State private var customWorkdays: [String: Bool] = [:]
-
+    @State private var customWorkdays: [Bool] = [true, true, true, true, true, false, false]
 
     // 弹窗控制
     @State private var activePicker: PickerType? = nil
@@ -54,7 +54,7 @@ struct SettingsView: View {
                             HStack {
                                 Text("上班时间")
                                 Spacer()
-                                Text(workStartTime.formattedTime(format: "HH:mm"))
+                                Text(workStartTime.formattedTime("HH:mm"))
                                     .foregroundColor(.gray)
                             }
                         }
@@ -63,7 +63,7 @@ struct SettingsView: View {
                             HStack {
                                 Text("下班时间")
                                 Spacer()
-                                Text(workEndTime.formattedTime(format: "HH:mm"))
+                                Text(workEndTime.formattedTime("HH:mm"))
                                     .foregroundColor(.gray)
                             }
                         }
@@ -75,7 +75,7 @@ struct SettingsView: View {
                             HStack {
                                 Text("入职日期")
                                 Spacer()
-                                Text(startDate.formattedTime(format: "yyyy/MM/dd"))
+                                Text(startDate.formattedTime("yyyy/MM/dd"))
                                     .foregroundColor(.gray)
                             }
                         }
@@ -84,15 +84,15 @@ struct SettingsView: View {
                     // 工作日设置
                     Section(header: Text("工作日")) {
                         HStack {
-                            ForEach(["周一", "周二", "周三", "周四", "周五", "周六", "周日"], id: \.self) { day in
+                            ForEach(0..<7, id: \.self) { index in
                                 Button(action: {
-                                    customWorkdays[day, default: false].toggle()
+                                    customWorkdays[index].toggle()
                                 }) {
-                                    Text(day)
+                                    Text(["周一", "周二", "周三", "周四", "周五", "周六", "周日"][index])
                                         .padding()
-                                        .background(customWorkdays[day, default: false] ? Color.yellow : Color.gray.opacity(0.2))
+                                        .background(customWorkdays[index] ? Color.yellow : Color.gray.opacity(0.2))
                                         .cornerRadius(8)
-                                        .foregroundColor(customWorkdays[day, default: false] ? .white : .black)
+                                        .foregroundColor(customWorkdays[index] ? .white : .black)
                                 }
                             }
                         }
@@ -100,7 +100,7 @@ struct SettingsView: View {
 
                     // 隐藏金额开关
                     Section {
-                        Toggle("隐藏所有金额", isOn: .constant(false))
+                        Toggle("隐藏所有金额", isOn: $appData.hideAllAmounts)
                     }
                 }
 
@@ -120,9 +120,11 @@ struct SettingsView: View {
             if let pickerType = activePicker {
                 PickerOverlay(
                     pickerType: pickerType,
-                    selectedTime: pickerType == .startTime ? $workStartTime : $workEndTime,
-                               selectedDate: pickerType == .startTime ? $workStartTime : $workEndTime,
-                               onDismiss: { activePicker = nil }
+                    selectedTime: pickerType == .startTime || pickerType == .endTime
+                        ? (pickerType == .startTime ? $workStartTime : $workEndTime)
+                        : .constant(Date()), // 提供一个默认的空绑定以避免 nil 问题
+                    selectedDate: pickerType == .startDate ? $startDate : .constant(appData.joinDate),
+                    onDismiss: { activePicker = nil }
                 )
                 .zIndex(1) // 保证弹窗显示在最前
             }
@@ -131,33 +133,30 @@ struct SettingsView: View {
     }
 
     private func loadSettings() {
-        monthlySalary = String(format: "%.0f", earningsManager.monthlySalary)
-        workStartTime = earningsManager.holidayManager.getWorkStartTime().toDate(format: "HH:mm") ?? Date()
-        workEndTime = earningsManager.holidayManager.getWorkEndTime().toDate(format: "HH:mm") ?? Date()
-        customWorkdays = earningsManager.holidayManager.loadCustomWorkdays()
-        startDate = Date() // 可根据需要加载实际数据
+        // 从 AppDataManager 加载数据
+        monthlySalary = String(format: "%.0f", appData.monthlySalary)
+        workStartTime = appData.workStartTime
+        workEndTime = appData.workEndTime
+        customWorkdays = appData.customWorkdays
+        startDate = appData.joinDate
     }
 
     private func saveSettings() {
         guard let salary = Double(monthlySalary) else { return }
-        earningsManager.monthlySalary = salary
-        earningsManager.holidayManager.saveWorkTimes(
-            startTime: workStartTime.formattedTime(format: "HH:mm"),
-            endTime: workEndTime.formattedTime(format: "HH:mm")
-        )
         
-        // 保存自定义工作日
-           let workdayArray = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"].map { customWorkdays[$0] ?? false }
-           earningsManager.holidayManager.saveCustomWorkdays(workdays: workdayArray)
-
-           // 保存入职日期
-           earningsManager.holidayManager.saveStartDate(startDate: startDate.formattedTime(format: "yyyy/MM/dd"))
-           
-        // 重新计算工作日和收入
-        earningsManager.updateMonthlySalary(newSalary: salary)
-        earningsManager.updateMonthlyAndYearlyEarnings()
-        earningsManager.updateTodayEarnings()
-       
+        appData.updateMonthlySalary(newSalary: salary)
+        appData.updateWorkTimes(startTime: workStartTime, endTime: workEndTime)
+        
+        // 使用自定义工作日布尔数组直接更新
+            let customWorkdaysBool = customWorkdays // 直接使用状态数
+        appData.updateCustomWorkdays(workdays: customWorkdaysBool)
+        
+        appData.updateJoinDate(newDate: startDate)
+        
+        // 更新收入和倒计时目标
+        appData.updateEarningsAndTargetTime()
+        
+        // 关闭设置页面
         isPresented = false
     }
 }

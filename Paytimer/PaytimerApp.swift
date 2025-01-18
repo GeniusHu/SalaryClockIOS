@@ -14,7 +14,6 @@ struct PaytimerApp: App {
                                         object: nil,
                                         queue: .main
                                     ) { _ in
-                                        EarningsManager.shared.updateMonthlyAndYearlyEarnings()
                                     }
                                 }
         }

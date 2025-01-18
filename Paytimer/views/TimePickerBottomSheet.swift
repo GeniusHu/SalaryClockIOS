@@ -1,10 +1,3 @@
-//
-//  TimePickerBottomSheet.swift
-//  Paytimer
-//
-//  Created by Hu on 2025/1/18.
-//
-
 import SwiftUI
 
 struct TimePickerBottomSheet: View {
@@ -37,9 +30,9 @@ struct TimePickerBottomSheet: View {
 
             Spacer()
         }
-        .frame(height: 300) // 设置弹窗高度
-        .background(Color.white) // 背景颜色为白色
-        .cornerRadius(16, corners: [.topLeft, .topRight]) // 圆角处理
+        .frame(height: 300)             // 底部弹出的高度
+        .background(Color.white)       // 背景颜色
+        .cornerRadius(16, corners: [.topLeft, .topRight])  // 只圆角顶部
         .shadow(color: .gray.opacity(0.2), radius: 10, x: 0, y: -5)
     }
 }

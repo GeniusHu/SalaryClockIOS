@@ -7,12 +7,10 @@
 
 import Foundation
 import SwiftUI
-
 struct ShareButtonView: View {
     var body: some View {
         Button(action: {
-            // 分享逻辑
-            print("分享给好友")
+            shareApp()
         }) {
             HStack {
                 Spacer() // 左侧留白
@@ -28,5 +26,14 @@ struct ShareButtonView: View {
             .cornerRadius(12) // 圆角
         }
         .frame(maxWidth: .infinity) // 横向撑满
+    }
+
+    /// 分享功能
+    private func shareApp() {
+        guard let url = URL(string: "https://example.com") else { return } // 替换为实际链接
+        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        if let rootViewController = UIApplication.shared.windows.first?.rootViewController {
+            rootViewController.present(activityVC, animated: true, completion: nil)
+        }
     }
 }

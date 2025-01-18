@@ -8,23 +8,18 @@
 import Foundation
 import SwiftUI
 
+// 原本的 userSettings 依赖都去掉
 struct UserInfoCard: View {
-    var userSettings: UserSettings
-
+    @ObservedObject var appData = AppDataManager.shared
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("\(NSLocalizedString("dashboard.current_time", comment: "")): \(Date().formattedTime())")
-            Text("\(NSLocalizedString("dashboard.join_date", comment: "")): \(userSettings.joinDate)")
-            Text("\(NSLocalizedString("dashboard.monthly_salary", comment: "")): \(userSettings.monthlySalary, specifier: "%.2f")")
+            Text("当前时间: \(appData.currentTime.formattedTime("yyyy-MM-dd HH:mm:ss"))")
+            Text("入职日期: \(appData.joinDate.formattedTime("yyyy-MM-dd"))")
+            Text("月薪: \(appData.monthlySalary, specifier: "%.2f")")
         }
         .padding()
         .background(Color.primary.opacity(0.1))
         .cornerRadius(10)
-    }
-}
-
-struct UserInfoCard_Previews: PreviewProvider {
-    static var previews: some View {
-        UserInfoCard(userSettings: UserSettings())
     }
 }

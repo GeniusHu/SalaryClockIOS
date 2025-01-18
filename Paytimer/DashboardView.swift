@@ -1,48 +1,39 @@
 import SwiftUI
-import Combine
 
 struct DashboardView: View {
-    @StateObject private var timerManager: TimerManager
-    @State private var userSettings = UserSettings()
-    @StateObject private var earningsManager = EarningsManager.shared
-
-
-    init() {
-        _timerManager = StateObject(wrappedValue: TimerManager(userSettings: UserSettings()))
-    }
+    @ObservedObject private var appData = AppDataManager.shared
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                HeaderView(currentTime: $timerManager.currentTime)
-                InfoCardView(userSettings: userSettings)
-                CountdownCardView()
-                EarningsCardView(earningsManager: earningsManager)
-                TipsCardView()
-                ShareButtonView()
+                // 头部：显示当前时间、设置按钮
+                HeaderView()
 
+                // 信息卡片
+                InfoCardView()
+
+                // 倒计时卡片
+                CountdownCardView()
+
+                // 收入卡片
+                EarningsCardView()
+
+                // 提示卡片
+                TipsCardView()
+
+                // 分享按钮
+                ShareButtonView()
             }
             .padding(.horizontal, 16)
         }
-        .background(Color(hex: "#FFD700")) // 背景颜色
+        .background(Color(hex: "#FFD700")) // 整体背景
         .onAppear {
-          timerManager.startTimer() // 页面加载时启动计时器
-            let customWorkdays = HolidayManager.shared.loadCustomWorkdays()
-                        let currentMonth = Calendar.current.component(.month, from: Date())
-                        let currentYear = Calendar.current.component(.year, from: Date())
-                        let workdays = earningsManager.incomeCalculator.calculateWorkdays(
-                            for: currentMonth,
-                            year: currentYear,
-                            customWorkdays: customWorkdays
-                        )
-                        let dailySalary = earningsManager.incomeCalculator.calculateDailySalary(
-                            monthlySalary: 20000,
-                            workdays: workdays
-                        )
-            earningsManager.updateTodayEarnings()
+            // 界面出现时，启动定时器
+            appData.startTimer()
         }
         .onDisappear {
-            timerManager.stopTimer() // 页面离开时停止计时器
+            // 界面离开时，停止定时器（可按需求决定）
+            appData.stopTimer()
         }
     }
 }
