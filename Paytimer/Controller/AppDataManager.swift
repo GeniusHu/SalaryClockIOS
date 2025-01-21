@@ -81,18 +81,12 @@ class AppDataManager: ObservableObject {
     
     // MARK: - 初始化
     private init() {
-        // 从本地加载已有的设置（示例只做简单处理，实际可根据需求完善）
-        loadFromStorage()
+        // 先设置默认的上下班时间（早9晚6）
+        workStartTime = makeTodayDate(hour: 9, minute: 0)
+        workEndTime = makeTodayDate(hour: 18, minute: 0)
         
-        // 初始化一些默认值，如果加载不到的话
-        if workStartTime == Date() {
-            // 给个默认 9:00
-            workStartTime = makeTodayDate(hour: 9, minute: 0)
-        }
-        if workEndTime == Date() {
-            // 给个默认 18:00
-            workEndTime = makeTodayDate(hour: 18, minute: 0)
-        }
+        // 从本地加载已有的设置，如果有存储的值会覆盖默认值
+        loadFromStorage()
         
         // 设置 holidayManager 里自定义工作日为当前设置
         holidayManager.saveCustomWorkdays(workdays: customWorkdays)
@@ -164,36 +158,21 @@ class AppDataManager: ObservableObject {
         // 先判断今天是否工作日
         let isTodayWork = holidayManager.isWorkday(date: now, customWorkdays: customWorkdays)
         
-        // 简单示例：如果现在 < workStartTime，则目标是“今日workStartTime”，文本=“距离上班还有”
-        // 如果现在在工作时间内，则目标=“今日workEndTime”
-        // 如果今天是休息日或已过下班，则看下一工作日9:00
-        if isTodayWork {
-            if now < workStartTime {
-                // 还没上班
-                targetTime = workStartTime
-                displayText = "距离上班时间还有"
-            } else if now >= workStartTime && now < workEndTime {
-                // 上班中
-                targetTime = workEndTime
-                displayText = "距离下班时间还有"
-            } else {
-                // 已下班，找下一个工作日
-                if let nextDay = holidayManager.nextWorkday(from: now.addingTimeInterval(86400)) {
-                    targetTime = makeDateSameDayAs(nextDay, hourAndMinuteFrom: workStartTime)
-                    displayText = "距离下次上班还有"
-                } else {
-                    // 极端情况：未来全是休息日
-                    targetTime = now
-                    displayText = "没有下次上班啦"
-                }
-            }
+        // 如果是工作日且在工作时间内，显示距离下班的倒计时
+        // 其他情况显示距离下次上班的倒计时
+        if isTodayWork && now >= workStartTime && now < workEndTime {
+            // 工作时间内，显示距离下班的倒计时
+            targetTime = workEndTime
+            displayText = "距离下班时间还有"
         } else {
-            // 如果今天是休息日
-            if let nextDay = holidayManager.nextWorkday(from: now) {
+            // 非工作时间（包括：今天是休息日，或者工作日但还未上班/已经下班）
+            // 寻找下一个工作日
+            let startDate = now < workStartTime && isTodayWork ? now : now.addingTimeInterval(86400)
+            if let nextDay = holidayManager.nextWorkday(from: startDate) {
                 targetTime = makeDateSameDayAs(nextDay, hourAndMinuteFrom: workStartTime)
                 displayText = "距离下次上班还有"
             } else {
-                // 一年内都没工作日
+                // 极端情况：未来全是休息日
                 targetTime = now
                 displayText = "没有下次上班啦"
             }
@@ -354,10 +333,12 @@ class AppDataManager: ObservableObject {
     /// 生成“今天日期 + 指定 hour/minute”的 Date，用于初始化
     private func makeTodayDate(hour: Int, minute: Int) -> Date {
         let now = Date()
-        var comps = Calendar.current.dateComponents([.year, .month, .day], from: now)
+        let calendar = Calendar.current
+        var comps = calendar.dateComponents([.year, .month, .day], from: now)
         comps.hour = hour
         comps.minute = minute
-        return Calendar.current.date(from: comps) ?? now
+        comps.second = 0  // 确保秒数为0
+        return calendar.date(from: comps) ?? now
     }
     
     /// 将 “nextWorkday”的年月日 与 “workStartTime”的小时分钟 合并

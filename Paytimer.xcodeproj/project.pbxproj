@@ -35,7 +35,7 @@
 		8595399D2D39375B005A071B /* Paytimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Paytimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		859539AD2D39375C005A071B /* PaytimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaytimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		859539B72D39375C005A071B /* PaytimerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaytimerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		859539DC2D395AAF005A071B /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		859539DC2D395AAF005A071B /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		85E4521A2D3968F8003456E0 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		85E452572D398B57003456E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		85E452592D398B8F003456E0 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
