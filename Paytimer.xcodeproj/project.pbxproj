@@ -10,6 +10,7 @@
 		859539DD2D395AAF005A071B /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 859539DC2D395AAF005A071B /* Podfile */; };
 		85E4521B2D3968F8003456E0 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85E4521A2D3968F8003456E0 /* UserDefaultsKeys.swift */; };
 		85E452582D398B57003456E0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 85E452562D398B57003456E0 /* Localizable.strings */; };
+		AAA2A5172D5F888600141A58 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AAA2A5162D5F888600141A58 /* PrivacyInfo.xcprivacy */; };
 		C1E43A2DE34B2489E3F1B51E /* Pods_Paytimer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23D021E582A1A24611D0E064 /* Pods_Paytimer.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		85E4521A2D3968F8003456E0 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
 		85E452572D398B57003456E0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		85E452592D398B8F003456E0 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		AAA2A5162D5F888600141A58 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C4F148A115C57484D0A59358 /* Pods-Paytimer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Paytimer.release.xcconfig"; path = "Target Support Files/Pods-Paytimer/Pods-Paytimer.release.xcconfig"; sourceTree = "<group>"; };
 		EFC8D24ACFA1B3B549317BB2 /* Pods-Paytimer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Paytimer.debug.xcconfig"; path = "Target Support Files/Pods-Paytimer/Pods-Paytimer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -123,6 +125,7 @@
 		E0B00386828F6C15975E9FA9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				AAA2A5162D5F888600141A58 /* PrivacyInfo.xcprivacy */,
 				EFC8D24ACFA1B3B549317BB2 /* Pods-Paytimer.debug.xcconfig */,
 				C4F148A115C57484D0A59358 /* Pods-Paytimer.release.xcconfig */,
 			);
@@ -247,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85E452582D398B57003456E0 /* Localizable.strings in Resources */,
+				AAA2A5172D5F888600141A58 /* PrivacyInfo.xcprivacy in Resources */,
 				859539DD2D395AAF005A071B /* Podfile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -488,6 +492,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Paytimer/Preview Content\"";
@@ -509,6 +514,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hu.Paytimer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -522,6 +528,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Paytimer/Preview Content\"";
@@ -543,6 +550,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hu.Paytimer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

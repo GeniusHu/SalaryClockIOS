@@ -1,0 +1,20 @@
+{
+  "NSPrivacyAccessedAPITypes": [
+    {
+      "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+      "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+    }
+  ],
+  "NSPrivacyCollectedDataTypes": [
+    {
+      "NSPrivacyCollectedDataType": "Identifiers",
+      "NSPrivacyCollectedDataTypeReasons": ["CA91.1"]
+    },
+    {
+      "NSPrivacyCollectedDataType": "Networking",
+      "NSPrivacyCollectedDataTypeReasons": ["CA91.2"]
+    }
+  ],
+  "NSPrivacyTrackingDomains": [],
+  "NSPrivacyTracking": false
+}

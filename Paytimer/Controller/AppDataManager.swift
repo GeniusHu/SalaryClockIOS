@@ -154,25 +154,44 @@ class AppDataManager: ObservableObject {
      */
     private func updateCountdown() {
         let now = currentTime
+        let calendar = Calendar.current
         
-        // 先判断今天是否工作日
+        // 获取今天的日期（不含时间）
+        let todayDate = calendar.startOfDay(for: now)
+        
+        // 获取今天的上下班时间点
+        let todayWorkStart = makeDateSameDayAs(todayDate, hourAndMinuteFrom: workStartTime)
+        let todayWorkEnd = makeDateSameDayAs(todayDate, hourAndMinuteFrom: workEndTime)
+        
+        // 判断今天是否工作日
         let isTodayWork = holidayManager.isWorkday(date: now, customWorkdays: customWorkdays)
         
-        // 如果是工作日且在工作时间内，显示距离下班的倒计时
-        // 其他情况显示距离下次上班的倒计时
-        if isTodayWork && now >= workStartTime && now < workEndTime {
-            // 工作时间内，显示距离下班的倒计时
-            targetTime = workEndTime
-            displayText = "距离下班时间还有"
+        if isTodayWork {
+            // 今天是工作日
+            if now < todayWorkStart {
+                // 还未到上班时间
+                targetTime = todayWorkStart
+                displayText = "距离上班还有"
+            } else if now >= todayWorkStart && now < todayWorkEnd {
+                // 正在上班时间
+                targetTime = todayWorkEnd
+                displayText = "距离下班还有"
+            } else {
+                // 已经下班，查找下一个工作日
+                if let nextDay = holidayManager.nextWorkday(from: todayDate.addingTimeInterval(86400)) {
+                    targetTime = makeDateSameDayAs(nextDay, hourAndMinuteFrom: workStartTime)
+                    displayText = "距离下次上班还有"
+                } else {
+                    targetTime = now
+                    displayText = "没有下次上班啦"
+                }
+            }
         } else {
-            // 非工作时间（包括：今天是休息日，或者工作日但还未上班/已经下班）
-            // 寻找下一个工作日
-            let startDate = now < workStartTime && isTodayWork ? now : now.addingTimeInterval(86400)
-            if let nextDay = holidayManager.nextWorkday(from: startDate) {
+            // 今天是休息日，查找下一个工作日
+            if let nextDay = holidayManager.nextWorkday(from: todayDate.addingTimeInterval(86400)) {
                 targetTime = makeDateSameDayAs(nextDay, hourAndMinuteFrom: workStartTime)
                 displayText = "距离下次上班还有"
             } else {
-                // 极端情况：未来全是休息日
                 targetTime = now
                 displayText = "没有下次上班啦"
             }
