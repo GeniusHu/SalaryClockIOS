@@ -1,20 +1,14 @@
-{
-  "NSPrivacyAccessedAPITypes": [
-    {
-      "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
-      "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
-    }
-  ],
-  "NSPrivacyCollectedDataTypes": [
-    {
-      "NSPrivacyCollectedDataType": "Identifiers",
-      "NSPrivacyCollectedDataTypeReasons": ["CA91.1"]
-    },
-    {
-      "NSPrivacyCollectedDataType": "Networking",
-      "NSPrivacyCollectedDataTypeReasons": ["CA91.2"]
-    }
-  ],
-  "NSPrivacyTrackingDomains": [],
-  "NSPrivacyTracking": false
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSPrivacyTracking</key>
+    <false/>
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array/>
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array/>
+</dict>
+</plist>
