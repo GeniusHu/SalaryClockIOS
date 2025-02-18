@@ -26,7 +26,7 @@ struct HeaderView: View {
                         .foregroundColor(.black)
                 }
             }
-            .fullScreenCover(isPresented: $showSettings) {
+            .sheet(isPresented: $showSettings) {
                 SettingsView(isPresented: $showSettings)
             }
             .padding([.leading, .trailing], 16)

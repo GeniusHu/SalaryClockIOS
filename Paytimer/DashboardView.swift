@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject private var appData = AppDataManager.shared
+    @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasShownOnboarding")
 
     var body: some View {
         ScrollView {
@@ -35,5 +36,10 @@ struct DashboardView: View {
             // 界面离开时，停止定时器（可按需求决定）
             appData.stopTimer()
         }
+        .overlay(Group {
+            if showOnboarding {
+                OnboardingOverlayView(isVisible: $showOnboarding)
+            }
+        })
     }
 }
