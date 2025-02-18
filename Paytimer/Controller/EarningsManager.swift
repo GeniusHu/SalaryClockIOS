@@ -103,23 +103,44 @@ class EarningsManager {
             return 0
         }
         
+        // 获取今天的日期（不含时间）
+        let calendar = Calendar.current
+        let todayDate = calendar.startOfDay(for: now)
+        
+        // 获取今天的上下班时间点
+        let todayWorkStart = makeDateSameDayAs(todayDate, hourAndMinuteFrom: workStartTime)
+        let todayWorkEnd = makeDateSameDayAs(todayDate, hourAndMinuteFrom: workEndTime)
+        
         // 情况1：还没到上班时间
-        if now < workStartTime {
+        if now < todayWorkStart {
             return 0
         }
         
         // 情况2：已过下班时间，今日收入已满=日薪
-        if now >= workEndTime {
+        if now >= todayWorkEnd {
             return dailySalary
         }
         
         // 情况3：正在上班时间范围内
-        let totalWorkSeconds = workEndTime.timeIntervalSince(workStartTime)
-        let workedSeconds = now.timeIntervalSince(workStartTime)
+        let totalWorkSeconds = todayWorkEnd.timeIntervalSince(todayWorkStart)
+        let workedSeconds = now.timeIntervalSince(todayWorkStart)
         
         let fraction = workedSeconds / totalWorkSeconds
         let partialEarnings = dailySalary * fraction
         return partialEarnings
+    }
+    
+    // 辅助函数：将日期的年月日与时间的时分秒合并
+    private func makeDateSameDayAs(_ day: Date, hourAndMinuteFrom time: Date) -> Date {
+        let calendar = Calendar.current
+        var dayComps = calendar.dateComponents([.year, .month, .day], from: day)
+        let timeComps = calendar.dateComponents([.hour, .minute, .second], from: time)
+        
+        dayComps.hour = timeComps.hour
+        dayComps.minute = timeComps.minute
+        dayComps.second = timeComps.second
+        
+        return calendar.date(from: dayComps) ?? day
     }
     
     // MARK: - 3. 计算本月到当前时刻的累计收入
